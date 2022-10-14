@@ -1,3 +1,31 @@
+<?php
+
+require "dbBroker.php";
+require "model/user.php";
+
+session_start();
+
+if(isset($_POST['username']) && isset($_POST['password'])){
+    $uname = $_POST['username'];
+    $upass = $_POST['password'];
+    $user_id = 1;
+
+    $korisnik = new User($user_id, $uname, $upass);
+
+    //$odg = $korisnik->loginUser($korisnik, $baza);
+    $odg = User::loginUser($korisnik, $baza);
+
+    echo json_encode($odg);
+
+    if($odg){
+        $_SESSION['user_id'] = $korisnik->id;
+        header('Location: home.php');
+        exit();
+    }
+
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +46,7 @@
                     <input type="password" name="password" class="form-control" required>
                     <button type="submit" class="btn btn-primary" name="submit">Prijavi se</button>
                 </div>
-                
+
 
             </form>
         </div>
